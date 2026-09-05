@@ -27,7 +27,9 @@ MODELE_PARCIMONIEUX = {
     "optimisme": 0.009,
     "auc_corrigee": 0.867,
     "pente_calibration": 1.08,
-    "citl": -0.16,
+    "ordonnee_calibration": 0.00,     # pente fixée à 1 ; observé/attendu 1,00. (Une version
+                                      # antérieure imprimait −0,16 : c'était « logit de la
+                                      # prévalence − moyenne des logits », autre quantité.)
     "brier": 0.146,
     "delong_delta": -0.011,
     "delong_p": 0.681,
@@ -52,10 +54,10 @@ REGLE_TROIS_ZONES = {
     "haut_vpp": 0.93, "haut_rv_positif": 12.41,
 }
 
-# ⚠️ Le M3 de la version imprimée de la Table 2 vaut 0,847 : il provient d'une sélection de
-# cinq paramètres par test F calculée sur toute la cohorte AVANT la validation croisée. Le M3
-# CONFORME à la méthode déclarée (LASSO refait dans chaque pli, nombre non fixé) vaut 0,810.
-# C'est cette valeur qu'il faut citer ; 0,847 n'est reproduit que pour établir la provenance.
+# ⚠️ Deux M3. Le M3 CONFORME à la méthode déclarée (LASSO refait dans chaque pli, nombre non
+# fixé) vaut 0,810 : c'est la valeur du manuscrit. Une première version de l'analyse donnait
+# 0,847, obtenu par une sélection de cinq paramètres au test F calculée sur toute la cohorte
+# AVANT la validation croisée ; il n'est reproduit que pour chiffrer l'effet de cette fuite.
 MODELES_RADIOMIQUES = {
     "M1": 0.818, "M2": 0.847, "M3_conforme": 0.810, "M3_avec_fuite": 0.847,
     "M3_parametres_par_pli": 12.6,
@@ -73,6 +75,19 @@ ROBUSTESSE_SELECTION = {
     "M2 + paramètres de forme": (0.831, -0.015, 4.8),
     "M2 + paramètres de premier ordre": (0.819, -0.028, 5.3),
     "M2 + paramètres de texture": (0.823, -0.024, 5.0),
+}
+
+
+# Deux contre-épreuves du résultat négatif de la radiomique (script 09) : retirer d'abord les
+# paramètres redondants (|rho de Spearman| > 0,85, à l'intérieur de chaque pli), ou ne garder
+# que les paramètres stables sous perturbation du masque (ICC ≥ 0,75, 23 sur 107).
+REDONDANCE_ET_STABILITE = {
+    "seuil_rho": 0.85, "seuil_icc": 0.75,
+    "M3_apres_filtrage_redondance": 0.813, "delta_redondance_vs_M2": -0.034,
+    "parametres_apres_filtrage_par_pli": 38.5, "retenus_apres_filtrage_par_pli": 8.0,
+    "n_parametres_stables": 23,
+    "M3_parametres_stables": 0.824, "delta_stables_vs_M2": -0.022, "delta_stables_vs_M3": 0.014,
+    "retenus_stables_par_pli": 4.2,
 }
 
 

@@ -1,15 +1,11 @@
 # Volume rénal et pronostic de l'hypertension artérielle maligne
 
-Code d'analyse d'une thèse de médecine portant sur la valeur pronostique du **volume rénal
-total** mesuré au scanner, chez des patients hospitalisés pour **hypertension artérielle
-maligne avec insuffisance rénale aiguë**.
+Valeur pronostique du **volume rénal total** mesuré au scanner, chez des patients hospitalisés pour **hypertension artérielle maligne avec insuffisance rénale aiguë**.
 
 Critère de jugement : la **non-récupération rénale à six mois** — dialyse chronique ou débit
 de filtration glomérulaire estimé inférieur à 15 mL/min/1,73 m².
 
-Ce dépôt contient les méthodes, pas les patients. Les données de santé ne sont pas
-distribuées ; un jeu **synthétique** de même structure permet d'exécuter la totalité des
-analyses sans rien demander à personne (voir [`donnees/README.md`](donnees/README.md)).
+Un jeu **synthétique** de même structure permet d'exécuter la totalité des analyses (voir [`donnees/README.md`](donnees/README.md)).
 
 ---
 
@@ -22,15 +18,13 @@ python outils/verifier_installation.py
 python lancer_tout.py --rapide
 ```
 
-`--rapide` exécute tout sauf les deux analyses radiomiques, qui sont longues. Sans cette
-option, compter une heure environ. Pour une seule analyse :
+`--rapide` exécute tout sauf les trois analyses radiomiques qui sont longues. Pour une seule analyse :
 
 ```bash
 python scripts/03_modele_parcimonieux.py
 ```
 
-Un pas-à-pas complet, depuis l'installation de conda jusqu'à la mise en ligne sur GitHub, se
-trouve dans [`GUIDE_DEMARRAGE.md`](GUIDE_DEMARRAGE.md).
+Un pas-à-pas complet, depuis l'installation de conda jusqu'à la mise en ligne sur GitHub, se trouve dans [`GUIDE_DEMARRAGE.md`](GUIDE_DEMARRAGE.md).
 
 ---
 
@@ -46,6 +40,7 @@ trouve dans [`GUIDE_DEMARRAGE.md`](GUIDE_DEMARRAGE.md).
 | 06 | `06_modeles_radiomiques.py` | **M1 / M2 / M3 emboîtés, et ce que coûte une fuite de sélection** | ~20 min |
 | 07 | `07_robustesse_selection.py` | huit stratégies de sélection : la conclusion dépend-elle du sélecteur ? | 20–60 min |
 | 08 | `08_figures.py` | courbes ROC, calibration, courbe de décision, règle à trois zones | quelques secondes |
+| 09 | `09_redondance_et_stabilite.py` | deux contre-épreuves du résultat négatif : dédoublonnage intra-pli des paramètres, restriction aux paramètres stables sous perturbation du masque | ~10 min |
 
 Chaque script est **autonome** : son en-tête explique ce qu'il calcule, pourquoi cette méthode
 plutôt qu'une autre, et ce qu'il ne faut pas lui faire dire. Les sorties vont dans
@@ -66,8 +61,8 @@ tolérance. Sur données synthétiques, cette vérification est sautée.
 | AUC hors échantillon | **0,864** [0,78 ; 0,94] |
 | AUC de la créatininémie seule | 0,876 |
 | AUC apparente / optimisme / corrigée | 0,876 / 0,009 / 0,867 |
-| Calibration : pente, Brier | 1,08 · 0,146 |
-| Transportabilité temporelle (IECV) | 0,881 |
+| Calibration : pente, ordonnée à l'origine, observé/attendu, Brier | 1,08 · 0,00 · 1,00 · 0,146 |
+| Transportabilité temporelle (IECV, deux strates) | 0,904 · 0,858 |
 | NRI catégoriel | +0,40 [0,15 ; 0,64] — **17 patients** nets mieux classés |
 
 **Règle à trois zones** — seuils **0,31** et **0,66** :
@@ -86,6 +81,8 @@ tolérance. Sur données synthétiques, cette vérification est sautée.
 | M2 = M1 + volume | 0,847 | ΔAUC vs M1 +0,028 [−0,04 ; +0,10], p = 0,43 |
 | **M3 = M2 + radiomique (LASSO intra-pli)** | **0,810** | ΔAUC vs M2 −0,037 [−0,084 ; +0,006], p = 0,09 |
 | M3 avec fuite de sélection ⚠️ | 0,847 | reproduit pour montrer l'effet de la fuite |
+| M3 après dédoublonnage intra-pli (\|rho\| > 0,85) | 0,813 | ΔAUC vs M2 −0,034 [−0,082 ; +0,008], p = 0,12 |
+| M3 restreint aux 23 paramètres stables (ICC ≥ 0,75) | 0,824 | ΔAUC vs M2 −0,022 [−0,067 ; +0,012], p = 0,20 |
 
 > **Le point méthodologique du travail.** Les deux dernières lignes sont le même modèle, sur
 > les mêmes données, avec le même plan de validation. La seule différence : dans la seconde,
@@ -131,7 +128,7 @@ htam-volume-renal/
 │   ├── verifier_installation.py          contrôle l'environnement avant de commencer
 │   ├── generer_donnees_synthetiques.py   fabrique le jeu de démonstration
 │   └── exporter_depuis_master.py         base source → CSV de travail (usage local seulement)
-├── donnees/                 dictionnaire + jeu synthétique (jamais de données réelles)
+├── donnees/                 dictionnaire, jeu synthétique, ICC des paramètres sous perturbation du masque (jamais de données réelles)
 ├── resultats/               sorties régénérables (exclues du dépôt)
 └── lancer_tout.py           exécute les analyses dans l'ordre
 ```

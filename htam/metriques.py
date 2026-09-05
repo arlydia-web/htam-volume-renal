@@ -120,12 +120,35 @@ def pente_calibration(y, p):
 
 
 def calibration_dans_le_grand(y, p):
-    """Écart moyen entre risque prédit et risque observé, sur l'échelle du logit."""
+    """Ordonnée à l'origine de calibration (« calibration in the large »).
+
+    Définition : ordonnée d'une régression logistique du devenir sur le logit des probabilités
+    prédites, la pente étant FIXÉE à 1 (le logit entre en décalage). Elle vaut 0 quand le risque
+    moyen prédit égale le risque moyen observé ; négative, le modèle surestime le risque.
+
+    Ne pas la confondre avec la différence « logit de la prévalence − moyenne des logits »,
+    qui n'est pas la même quantité : la moyenne des logits n'est pas le logit de la moyenne.
+    Sur ce modèle, l'une vaut 0,00 et l'autre −0,16 pour un rapport observé/attendu de 1,00.
+
+    Rend (ordonnée, erreur-type). Newton-Raphson sur un seul paramètre.
+    """
     e = np.clip(np.asarray(p, dtype=float), 1e-9, 1 - 1e-9)
     logit = np.log(e / (1 - e))
-    y = np.asarray(y)
-    modele = LogisticRegression(C=1e9, max_iter=10000, fit_intercept=True)
-    return float(modele.fit(np.zeros((len(y), 1)), y).intercept_[0] - np.mean(logit))
+    y = np.asarray(y, dtype=float)
+    a = 0.0
+    for _ in range(100):
+        q = 1.0 / (1.0 + np.exp(-(logit + a)))
+        pas = float((y - q).sum()) / float((q * (1 - q)).sum())
+        a += pas
+        if abs(pas) < 1e-12:
+            break
+    q = 1.0 / (1.0 + np.exp(-(logit + a)))
+    return float(a), float(1.0 / np.sqrt((q * (1 - q)).sum()))
+
+
+def observe_sur_attendu(y, p):
+    """Rapport du nombre d'événements observés au nombre attendu (somme des probabilités)."""
+    return float(np.asarray(y, dtype=float).sum() / np.asarray(p, dtype=float).sum())
 
 
 def brier(y, p):
@@ -253,6 +276,7 @@ def fr(x, decimales=3):
     """0.847 → « 0,847 ». Le manuscrit est en français, ses chiffres aussi."""
     if x is None or (isinstance(x, float) and np.isnan(x)):
         return "—"
+    x = round(float(x), decimales) + 0.0   # efface le zéro négatif : −0,001 s'écrit « 0,00 »
     return f"{x:.{decimales}f}".replace(".", ",").replace("-", "−")
 
 
@@ -260,6 +284,7 @@ def fr_signe(x, decimales=3):
     """+0,028 / −0,037 — le signe explicite, pour tout ce qui est un ÉCART."""
     if x is None or (isinstance(x, float) and np.isnan(x)):
         return "—"
+    x = round(float(x), decimales) + 0.0
     return ("+" if x >= 0 else "−") + f"{abs(x):.{decimales}f}".replace(".", ",")
 
 

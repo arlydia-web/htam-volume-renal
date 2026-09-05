@@ -24,6 +24,7 @@ from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import StandardScaler
+from scipy.stats import spearmanr
 
 from . import config
 
@@ -104,14 +105,39 @@ def selection(strategie, R_app, y_app, k=None):
     return idx if len(idx) else list(range(min(k, R_app.shape[1])))
 
 
-def oof_radiomique(Xc, Xr, y, strategie):
+def filtre_redondance(R, seuil=0.85):
+    """Indices des paramètres conservés après retrait des doublons, sur le pli d'apprentissage.
+
+    Tant que deux paramètres ont une corrélation de rang supérieure au seuil en valeur absolue,
+    celui des deux dont la corrélation moyenne au reste du jeu est la plus forte est écarté.
+    La règle est déterministe : deux exécutions donnent le même jeu. Appliquée sur toute la
+    cohorte, elle introduirait la fuite d'information que ce travail s'attache à éviter ; elle
+    n'est donc appelée que sur le pli d'apprentissage.
+    """
+    rho = np.abs(spearmanr(R).correlation)
+    np.fill_diagonal(rho, 0.0)
+    rho = np.nan_to_num(rho)
+    garde = list(range(R.shape[1]))
+    while len(garde) > 1:
+        sous = rho[np.ix_(garde, garde)]
+        i, j = np.unravel_index(np.argmax(sous), sous.shape)
+        if sous[i, j] <= seuil:
+            break
+        a, b = garde[i], garde[j]
+        garde.remove(a if rho[a, garde].mean() >= rho[b, garde].mean() else b)
+    return garde
+
+
+def oof_radiomique(Xc, Xr, y, strategie, seuil_redondance=None):
     """Prédictions hors échantillon d'un modèle clinique + radiomique, sélection INTRA-PLI.
 
     Rend (probabilités, nombre moyen de paramètres retenus par pli). Le bloc clinique et le
-    bloc radiomique sont réduits séparément, chacun sur le pli d'apprentissage.
+    bloc radiomique sont réduits séparément, chacun sur le pli d'apprentissage. Avec
+    `seuil_redondance`, les doublons sont retirés dans le pli avant la sélection (script 09) ;
+    le nombre moyen de paramètres survivant au filtre est alors rendu en troisième position.
     """
     Xc, y = np.asarray(Xc, dtype=float), np.asarray(y)
-    tailles = []
+    tailles, survivants = [], []
     somme, compte = np.zeros(len(y)), np.zeros(len(y))
     for app, val in plan_validation().split(Xc, y):
         ech_c = StandardScaler().fit(Xc[app])
@@ -123,6 +149,10 @@ def oof_radiomique(Xc, Xr, y, strategie):
             R_app, R_val = ech_r.transform(Xr[app]), ech_r.transform(Xr[val])
             filtre = VarianceThreshold(1e-8).fit(R_app)
             R_app, R_val = filtre.transform(R_app), filtre.transform(R_val)
+            if seuil_redondance is not None:
+                garde = filtre_redondance(R_app, seuil_redondance)
+                survivants.append(len(garde))
+                R_app, R_val = R_app[:, garde], R_val[:, garde]
             retenus = selection(strategie, R_app, y[app])
             tailles.append(len(retenus))
             X_app = np.hstack([C_app, R_app[:, retenus]])
@@ -130,6 +160,8 @@ def oof_radiomique(Xc, Xr, y, strategie):
         modele = _regression().fit(X_app, y[app])
         somme[val] += modele.predict_proba(X_val)[:, 1]
         compte[val] += 1
+    if seuil_redondance is not None:
+        return somme / compte, float(np.mean(tailles)), float(np.mean(survivants))
     return somme / compte, (float(np.mean(tailles)) if tailles else 0.0)
 
 

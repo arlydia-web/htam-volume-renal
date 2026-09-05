@@ -88,12 +88,16 @@ def main():
 
     # ── (3) calibration ───────────────────────────────────────────────────────
     pente = metriques.pente_calibration(y, p_modele)
-    citl = metriques.calibration_dans_le_grand(y, p_modele)
+    citl, citl_se = metriques.calibration_dans_le_grand(y, p_modele)
+    oe = metriques.observe_sur_attendu(y, p_modele)
     brier = metriques.brier(y, p_modele)
     print(f"\n(3) Calibration, sur les prédictions hors échantillon")
-    print(f"    pente = {fr(pente, 2)}   calibration dans le grand = {fr(citl, 2)}   "
-          f"Brier = {fr(brier, 3)}")
-    print("    (pente 1 = idéale ; en deçà, le modèle est trop confiant)")
+    print(f"    pente = {fr(pente, 2)}   ordonnée à l'origine = {fr(citl, 2)} "
+          f"(IC 95 % {fr(citl - 1.96 * citl_se, 2)} à {fr(citl + 1.96 * citl_se, 2)})   "
+          f"observé/attendu = {fr(oe, 2)}   Brier = {fr(brier, 3)}")
+    print("    (pente 1 et ordonnée 0 = idéales ; en deçà de 1, le modèle est trop confiant)")
+    controle.verifier("ordonnée à l'origine de calibration", citl,
+                      reference.MODELE_PARCIMONIEUX["ordonnee_calibration"], tolerance=0.02)
     controle.verifier("pente de calibration", pente,
                       reference.MODELE_PARCIMONIEUX["pente_calibration"], tolerance=0.03)
     controle.verifier("score de Brier", brier, reference.MODELE_PARCIMONIEUX["brier"],
@@ -152,7 +156,8 @@ def main():
         n=n, evenements=int(y.sum()), synthetique=synthetique,
         auc_hors_echantillon=auc_modele, ic_auc=list(ic), auc_creatininemie_seule=auc_creat,
         auc_apparente=auc_apparente, optimisme=opt, auc_corrigee=auc_apparente - opt["optimisme"],
-        pente_calibration=pente, calibration_dans_le_grand=citl, brier=brier,
+        pente_calibration=pente, ordonnee_calibration=citl, ordonnee_calibration_erreur_type=citl_se,
+        observe_sur_attendu=oe, brier=brier,
         delong=test, courbe_de_decision=decision,
         iecv=dict(periodes=periodes, moyenne=moyenne),
         equation=dict(constante=constante, coefficients=coefficients,

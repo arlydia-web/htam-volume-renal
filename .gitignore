@@ -5,6 +5,10 @@ donnees/*
 !donnees/dictionnaire_variables.csv
 !donnees/cohorte_synthetique.csv
 !donnees/radiomique_synthetique.csv
+!donnees/icc_perturbation_masque.csv
+
+# archives : pourraient contenir des données
+*.zip
 
 # formats de données susceptibles de contenir des patients, où qu'ils soient
 *.xlsx

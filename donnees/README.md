@@ -19,6 +19,7 @@ critiquer un choix, ou d'appliquer la même méthode à sa propre cohorte.
 | `dictionnaire_variables.csv` | la signification, l'unité et le type de chaque variable attendue |
 | `cohorte_synthetique.csv` | jeu **simulé** de 86 patients, même structure que les données réelles |
 | `radiomique_synthetique.csv` | jeu **simulé** de 79 × 107 paramètres radiomiques |
+| `icc_perturbation_masque.csv` | pour chacun des 107 paramètres, le coefficient de corrélation intraclasse mesuré entre le masque original et ses versions dilatées (2 et 4 mm) et érodée (2 mm) sur 80 patients ; aucune donnée individuelle, sert au script 09 |
 
 Les fichiers synthétiques sont tirés d'un modèle statistique simple (voir
 `outils/generer_donnees_synthetiques.py`) : ils reproduisent les ordres de grandeur publiés et

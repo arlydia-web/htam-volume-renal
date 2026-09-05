@@ -4,7 +4,7 @@
 Exécute toutes les analyses dans l'ordre, et s'arrête à la première qui échoue.
 
     python lancer_tout.py              toutes les analyses
-    python lancer_tout.py --rapide     saute les deux plus longues (06 et 07)
+    python lancer_tout.py --rapide     saute les trois plus longues (06, 07 et 09)
     python lancer_tout.py 03 04        seulement les analyses demandées
 
 Chaque script est lancé dans un processus séparé : une analyse qui échoue n'emporte pas les
@@ -28,8 +28,9 @@ ANALYSES = [
     ("06", "Modèles radiomiques M1/M2/M3", "une vingtaine de minutes"),
     ("07", "Robustesse de la sélection", "vingt à soixante minutes"),
     ("08", "Figures", "quelques secondes"),
+    ("09", "Redondance et stabilité des paramètres radiomiques", "dix à vingt minutes"),
 ]
-LONGUES = {"06", "07"}
+LONGUES = {"06", "07", "09"}
 
 
 def script(numero):
@@ -42,7 +43,7 @@ def script(numero):
 def main():
     analyseur = argparse.ArgumentParser(description=__doc__,
                                         formatter_class=argparse.RawDescriptionHelpFormatter)
-    analyseur.add_argument("numeros", nargs="*", help="numéros d'analyse (01 à 08)")
+    analyseur.add_argument("numeros", nargs="*", help="numéros d'analyse (01 à 09)")
     analyseur.add_argument("--rapide", action="store_true",
                            help="saute les analyses radiomiques, les plus longues")
     arguments = analyseur.parse_args()
