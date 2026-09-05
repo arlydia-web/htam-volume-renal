@@ -1,0 +1,31 @@
+variable;fichier;type;unité;description
+id;cohorte et radiomique;texte;;identifiant pseudonymisé, unique, qui relie les deux fichiers
+outcome_M6;cohorte;binaire;0/1;critère de jugement — 1 = non-récupération rénale à six mois (dialyse chronique ou DFGe < 15 mL/min/1,73 m²)
+creat_admi;cohorte;continu;µmol/L;créatininémie à l'admission
+VRT;cohorte;continu;cm³;volume rénal total (somme des deux reins) mesuré au scanner
+age;cohorte;continu;années;âge à l'admission
+sexe;cohorte;binaire;0/1;0 = homme, 1 = femme
+IMC;cohorte;continu;kg/m²;indice de masse corporelle (trois valeurs manquantes, imputées par la médiane dans les modèles seulement)
+PAS_admission;cohorte;continu;mmHg;pression artérielle systolique à l'admission
+PAD_admission;cohorte;continu;mmHg;pression artérielle diastolique à l'admission
+MAT;cohorte;binaire;0/1;microangiopathie thrombotique biologique (hémolyse mécanique)
+Hb_adm;cohorte;continu;g/dL;hémoglobine à l'admission
+plaquettes_adm;cohorte;continu;G/L;numération plaquettaire à l'admission
+LDH_adm;cohorte;continu;UI/L;lactate déshydrogénase à l'admission
+hapto_basse;cohorte;binaire;0/1;haptoglobine basse ou indosable — variable binaire car la valeur est souvent censurée
+PU_admission_g_par_g;cohorte;continu;g/g;protéinurie rapportée à la créatininurie
+annee_hospitalisation;cohorte;entier;année;année d'admission — sert à la validation croisée temporelle (la date exacte n'est pas exportée)
+dialyse_hosp;cohorte;binaire;0/1;épuration extra-rénale pendant le séjour
+retinopathie;cohorte;binaire;0/1;rétinopathie hypertensive documentée au fond d'œil
+oedeme_papillaire;cohorte;binaire;0/1;œdème papillaire — les fonds d'œil codés « III » sont comptés (voir outils/exporter_depuis_master.py)
+cephalees;cohorte;binaire;0/1;céphalées à l'admission
+PRES;cohorte;binaire;0/1;encéphalopathie postérieure réversible
+HVG;cohorte;binaire;0/1;hypertrophie ventriculaire gauche
+HTA_connue;cohorte;binaire;0/1;hypertension artérielle connue avant l'épisode
+sans_suivi_anterieur;cohorte;binaire;0/1;aucun suivi médical antérieur déclaré
+diabete;cohorte;binaire;0/1;diabète connu
+tabac_actif;cohorte;binaire;0/1;tabagisme actif
+ethnie;cohorte;texte;;origine géographique déclarée
+original_shape_*;radiomique;continu;variable;paramètres de FORME du parenchyme rénal (PyRadiomics, nomenclature IBSI)
+original_firstorder_*;radiomique;continu;variable;paramètres de PREMIER ORDRE (distribution des densités)
+original_glcm_* original_glrlm_* original_glszm_* original_gldm_* original_ngtdm_*;radiomique;continu;variable;paramètres de TEXTURE (matrices de cooccurrence, de plages, de zones, de dépendance, de différence de tons)

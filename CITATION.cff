@@ -1,0 +1,30 @@
+# Fichier de citation (format Citation File Format). GitHub l'affiche automatiquement
+# sous la forme d'un bouton « Cite this repository ».
+# À COMPLÉTER AVANT PUBLICATION : identifiant ORCID, adresse du dépôt, date de version.
+cff-version: 1.2.0
+title: >-
+  Code d'analyse — volume rénal et pronostic de l'hypertension artérielle
+  maligne avec insuffisance rénale aiguë
+message: >-
+  Si vous utilisez ce code, merci de citer la thèse dont il provient.
+type: software
+authors:
+  - family-names: Arab
+    given-names: Lydia
+    # orcid: 'https://orcid.org/0000-0000-0000-0000'
+abstract: >-
+  Code reproductible des analyses statistiques d'une thèse de médecine portant
+  sur la valeur pronostique du volume rénal total mesuré au scanner, chez des
+  patients hospitalisés pour hypertension artérielle maligne avec insuffisance
+  rénale aiguë. Comprend la validation interne du modèle parcimonieux
+  (créatininémie + volume), les modèles radiomiques emboîtés, et la
+  démonstration chiffrée de l'effet d'une fuite de sélection.
+keywords:
+  - hypertension artérielle maligne
+  - volume rénal
+  - radiomique
+  - modèle de prédiction
+  - néphrologie
+license: MIT
+version: 1.0.0
+date-released: '2026-08-21'
