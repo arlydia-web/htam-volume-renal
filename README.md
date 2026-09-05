@@ -37,7 +37,7 @@ Un pas-à-pas complet, depuis l'installation de conda jusqu'à la mise en ligne 
 | 03 | `03_modele_parcimonieux.py` | **validation interne du modèle créatininémie + volume** : discrimination, optimisme, calibration, courbe de décision, transportabilité temporelle | ~1 min |
 | 04 | `04_reclassification.py` | NRI continu, NRI catégoriel, IDI, table de reclassification | < 1 min |
 | 05 | `05_regle_trois_zones.py` | la règle de décision à deux seuils et ses tables de contingence | quelques secondes |
-| 06 | `06_modeles_radiomiques.py` | **M1 / M2 / M3 emboîtés, et ce que coûte une fuite de sélection** | ~20 min |
+| 06 | `06_modeles_radiomiques.py` | **M1 / M2 / M3 emboîtés** | ~20 min |
 | 07 | `07_robustesse_selection.py` | huit stratégies de sélection : la conclusion dépend-elle du sélecteur ? | 20–60 min |
 | 08 | `08_figures.py` | courbes ROC, calibration, courbe de décision, règle à trois zones | quelques secondes |
 | 09 | `09_redondance_et_stabilite.py` | deux contre-épreuves du résultat négatif : dédoublonnage intra-pli des paramètres, restriction aux paramètres stables sous perturbation du masque | ~10 min |
