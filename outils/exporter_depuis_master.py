@@ -15,9 +15,6 @@ CE QU'IL NE FAIT PAS, ET C'EST VOULU
   · il n'écrit rien hors de `donnees/`, dossier que `.gitignore` exclut du dépôt. Les fichiers
     produits contiennent des données de patients : ils ne doivent JAMAIS être publiés.
 
-⚠️ AVANT DE PUBLIER LE DÉPÔT, vérifier que `git status` ne propose aucun fichier de `donnees/`
-autre que les fichiers synthétiques, le dictionnaire et le README.
-
 UNE RÈGLE DE CODAGE À CONNAÎTRE. L'œdème papillaire : deux nomenclatures coexistent dans la
 base source. Dans l'une, le stade III de la classification en trois stades désigne la
 rétinopathie maligne AVEC œdème papillaire ; dans celle de Keith-Wagener-Barker, l'œdème

@@ -1,6 +1,3 @@
-# Fichier de citation (format Citation File Format). GitHub l'affiche automatiquement
-# sous la forme d'un bouton « Cite this repository ».
-# À COMPLÉTER AVANT PUBLICATION : identifiant ORCID, date de version.
 cff-version: 1.2.0
 title: >-
   Code d'analyse — volume rénal et pronostic de l'hypertension artérielle
@@ -11,7 +8,6 @@ type: software
 authors:
   - family-names: Arab
     given-names: Lydia
-    # orcid: 'https://orcid.org/0000-0000-0000-0000'
 abstract: >-
   Code reproductible des analyses statistiques d'une thèse de médecine portant
   sur la valeur pronostique du volume rénal total mesuré au scanner, chez des
