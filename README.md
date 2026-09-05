@@ -2,7 +2,7 @@
 
 Valeur pronostique du **volume rénal total** mesuré au scanner, chez des patients hospitalisés pour **hypertension artérielle maligne avec insuffisance rénale aiguë**.
 
-Critère de jugement : la **non-récupération rénale à six mois** — dialyse chronique ou débit
+Critère de jugement : la **non-récupération rénale à six mois**, dialyse chronique ou débit
 de filtration glomérulaire estimé inférieur à 15 mL/min/1,73 m².
 
 Un jeu **synthétique** de même structure permet d'exécuter la totalité des analyses (voir [`donnees/README.md`](donnees/README.md)).
